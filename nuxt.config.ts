@@ -2,10 +2,11 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  ssr: false, // bắt buộc cho GitHub Pages (SPA)
+  ssr: false, // GitHub Pages chỉ hỗ trợ static SPA
 
+  // 👉 quan trọng: base đúng repo name
   app: {
-    baseURL: "/customer-nha-cho-thue/", // ⚠️ TÊN REPO
+    baseURL: "/customer-nha-cho-thue/",
     buildAssetsDir: "assets",
   },
 
