@@ -1,29 +1,45 @@
-name: Deploy Nuxt to GitHub Pages
+# .github/workflows/deploy.yml
+name: Deploy Nuxt Static Site + Sitemap
 
 on:
   push:
-    branches: ["main"] # hoặc branch bạn dùng
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      - run: yarn install
-      - run: yarn run generate
+      - name: Install dependencies
+        run: yarn install
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Generate static site
+        run: yarn generate
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public
+          path: ./.output/public
 
-      - uses: actions/deploy-pages@v4
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
