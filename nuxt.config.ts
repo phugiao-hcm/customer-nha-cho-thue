@@ -37,9 +37,9 @@ export default defineNuxtConfig({
                 },
                 {
                     property: "og:image",
-                    content: "https://trodayroi.vn/images/og-image.png",
+                    content: "https://phugiao-hcm.github.io/customer-nha-cho-thue/images/og-image.png",
                 },
-                { property: "og:url", content: "https://trodayroi.vn/" },
+                { property: "og:url", content: "https://phugiao-hcm.github.io/customer-nha-cho-thue/" },
             ],
             link: [
                 { rel: "icon", type: "image/png", href: "/favicon-32x32.png" },
@@ -53,7 +53,7 @@ export default defineNuxtConfig({
     modules: ["@nuxtjs/robots", "@nuxtjs/seo"],
 
     site: {
-        url: "https://trodayroi.vn", // tên miền của bạn
+        url: "https://phugiao-hcm.github.io/customer-nha-cho-thue", // tên miền của bạn
     },
 
     // ✅ Sitemap cho SEO
@@ -63,7 +63,7 @@ export default defineNuxtConfig({
             { userAgent: "*", allow: "/" },
             { userAgent: "*", disallow: ["/admin/"] },
         ],
-        sitemap: "https://trodayroi.vn/sitemap.xml",
+        sitemap: "https://phugiao-hcm.github.io/customer-nha-cho-thue/sitemap.xml",
     },
 
     css: ["~/assets/css/main.css"],
