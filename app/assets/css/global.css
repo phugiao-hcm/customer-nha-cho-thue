@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .filter-select {
+    @apply w-full border border-gray-300 rounded-lg px-3 py-2 text-sm 
+           focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .filter-input {
+    @apply border border-gray-300 rounded-md px-2 py-1 text-sm 
+           focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .filter-button {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+
+  .filter-reset {
+    @apply filter-button bg-gray-100 hover:bg-gray-200;
+  }
+
+  .filter-apply {
+    @apply filter-button bg-blue-500 text-white hover:bg-blue-600;
+  }
+}

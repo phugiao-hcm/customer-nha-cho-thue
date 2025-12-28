@@ -1,0 +1,34 @@
+{
+    "name": "trodayroi.vn",
+    "private": true,
+    "type": "module",
+    "version": "1.3.0",
+    "scripts": {
+        "dev": "nuxt dev",
+        "preview": "nuxt preview",
+        "build": "node scripts/generate-sitemap.js && nuxt build",
+        "generate": "nuxt generate",
+        "sitemap": "node scripts/generate-sitemap.js",
+        "deploy": "npm run generate && npm run sitemap && gh-pages -d .output/public",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@amplitude/analytics-browser": "^2.23.5",
+        "@nuxtjs/robots": "^5.5.1",
+        "@nuxtjs/seo": "^3.1.0",
+        "@nuxtjs/tailwindcss": "^6.14.0",
+        "@tailwindcss/vite": "^4.1.11",
+        "firebase": "^12.1.0",
+        "nuxt": "^4.0.1",
+        "swiper": "^11.2.10",
+        "vue": "^3.5.18",
+        "vue-easy-lightbox": "^1.19.0",
+        "vue-router": "^4.5.1"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.21",
+        "gh-pages": "^6.3.0",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.11"
+    }
+}
