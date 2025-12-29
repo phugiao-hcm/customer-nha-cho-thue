@@ -6,154 +6,73 @@
             <!-- Logo -->
             <NuxtLink
                 to="/"
-                @click="onClickHomeLogo"
-                class="text-2xl font-bold text-blue-500"
+                class="text-2xl font-bold text-blue-500 flex items-center space-x-2"
             >
                 <img
                     src="/images/og-image.png"
                     alt="Logo"
                     class="h-10 inline"
                 />
-                trodayroi.vn
+                <span class="hidden md:block">trodayroi.vn</span>
             </NuxtLink>
-
-            <!-- Desktop Navigation + Button -->
-            <div class="hidden md:flex items-center space-x-4">
-                <!-- Đăng tin miễn phí button -->
-                <NuxtLink
-                    to="/about"
-                    @click="onClickPostFree"
-                    class="ml-4 bg-white hover:bg-blue-100 border text-blue-600 font-semibold py-2 px-4 rounded-lg transition-colors"
-                >
-                    Đăng tin miễn phí
-                </NuxtLink>
-            </div>
 
             <!-- Hamburger Icon for Mobile -->
-            <button
-                @click="isOpen = !isOpen"
-                class="md:hidden text-gray-700 focus:outline-none"
-                aria-label="Toggle menu"
-            >
-                <svg
-                    v-if="!isOpen"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+            <div class="md:flex items-center space-x-4">
+                <!-- Đăng tin miễn phí button -->
+                <button
+                    class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 active:scale-95 transition"
+                    @click="setAvailable"
                 >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"
-                    />
-                </svg>
-                <svg
-                    v-else
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    Còn phòng
+                </button>
+                <button
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 active:scale-95 transition"
+                    @click="setHidden"
                 >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                    />
-                </svg>
-            </button>
+                    Hết phòng
+                </button>
+            </div>
         </div>
 
-        <!-- Mobile Navigation -->
-        <div v-if="isOpen" class="md:hidden px-4 pb-4 space-y-2 text-gray-700">
-            <NuxtLink
-                to="/"
-                @click="onClickHome"
-                class="block hover:text-blue-600 transition-colors"
-                >Trang chủ</NuxtLink
+        <!-- Toast -->
+        <transition name="fade">
+            <div
+                v-if="toast.show"
+                :class="[
+                    'fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg z-50 text-white',
+                    toast.type === 'success' ? 'bg-green-600' : 'bg-gray-700',
+                ]"
             >
-            <NuxtLink
-                to="/posts"
-                @click="onClickPosts"
-                class="block hover:text-blue-600 transition-colors"
-                >Phòng trọ</NuxtLink
-            >
-            <NuxtLink
-                to="/news"
-                @click="onClickNews"
-                class="block hover:text-blue-600 transition-colors"
-                >Tin tức</NuxtLink
-            >
-            <NuxtLink
-                to="/about"
-                @click="onClickAboutUs"
-                class="block hover:text-blue-600 transition-colors"
-                >Về chúng tôi</NuxtLink
-            >
-
-            <!-- Mobile Đăng tin miễn phí button -->
-            <NuxtLink
-                to="/about"
-                @click="onClickPostFree"
-                class="block mt-2 bg-white hover:bg-blue-100 border text-blue-600 font-semibold py-2 px-4 rounded-lg text-center transition-colors"
-            >
-                Đăng tin miễn phí
-            </NuxtLink>
-        </div>
+                {{ toast.message }}
+            </div>
+        </transition>
     </header>
 </template>
 
 <script setup>
-import { ref } from "vue";
-const { $amplitude } = useNuxtApp();
+import { ref, computed, onMounted, reactive } from "vue";
 
-const isOpen = ref(false);
+const toast = reactive({
+    show: false,
+    message: "",
+    type: "success", // success | hidden
+});
 
-const onClickPostFree = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_post_free", {
-        label: "(Header) - Liên hệ - Đăng tin miễn phí",
-    });
-    window.open(
-        "https://phugiao-hcm.github.io/admin-dang-tin-thue-tro-x1/post/create",
-        "_blank"
-    );
+const showToast = (message, type = "success") => {
+    toast.message = message;
+    toast.type = type;
+    toast.show = true;
+
+    setTimeout(() => {
+        toast.show = false;
+    }, 2500);
 };
 
-const onClickNews = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_news", {
-        label: "(Header) - Tin tức",
-    });
-};
-const onClickAboutUs = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_about_us", {
-        label: "(Header) - Về chúng tôi",
-    });
-};
-const onClickPosts = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_post", {
-        label: "(Header) - Phòng trọ",
-    });
+const setAvailable = () => {
+    showToast("🎉 Phòng của bạn đã đăng lại thành công", "success");
 };
 
-const onClickHome = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_home", {
-        label: "(Header) - Trang chủ",
-    });
-};
-
-const onClickHomeLogo = () => {
-    isOpen.value = false;
-    $amplitude.track("button_header_clicked_home_logo", {
-        label: "(Header) - Trang chủ (Logo)",
-    });
+const setHidden = () => {
+    showToast("⏸️ Phòng của bạn đã tạm ẩn trên hệ thống", "hidden");
 };
 </script>
