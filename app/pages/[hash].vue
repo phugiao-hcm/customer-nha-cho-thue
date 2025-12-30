@@ -234,27 +234,17 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { usePhongTroDetail } from "~/apis/posts";
 import VueEasyLightbox from "vue-easy-lightbox";
-const { $amplitude } = useNuxtApp();
+import { decodeId, encodeId } from "~/utils/idHash";
 
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 const route = useRoute();
-
-definePageMeta({
-    alias: ["/phong-tro/:slug"], // URL phụ
-});
-
-useHead({
-    link: [
-        {
-            rel: "canonical",
-            href: "https://trodayroi.vn/phong-tro/" + route.params.slug,
-        },
-    ],
-});
 
 const ui = reactive({
     isLoading: false,
 });
+
+const hash = route.params.hash;
+const phongTroId = decodeId(hash);
 
 // modules Swiper
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
@@ -285,23 +275,14 @@ const maskedPhone = computed(() =>
     showPhone.value ? property.value.authorMobile : "**** *** ***"
 );
 
-// slug = "nha-tro-tan-thanh-123"
-const slug = route.params.slug;
-// Tách ID (sau dấu "-" cuối cùng)
-const id = 41242;
-
 onMounted(() => {
-    $amplitude.track("view_room_detail", {
-        label: "Xem chi tiết phòng",
-    });
-
     fetchProjects();
 });
 
 const fetchProjects = async () => {
     try {
         ui.isLoading = true;
-        const { data, pending, error } = await usePhongTroDetail(id);
+        const { data, pending, error } = await usePhongTroDetail(phongTroId);
         property.value = data.value.data;
     } catch (e) {
         console.error(e);
@@ -315,8 +296,6 @@ const facilityTexts = (facilities) => {
         facilities.includes(item.value)
     ).map((item) => item.label);
 };
-
-// const mapUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${property.latitude},${property.longitude}`;
 </script>
 
 <style>

@@ -20,14 +20,14 @@
             <div class="md:flex items-center space-x-4">
                 <!-- Đăng tin miễn phí button -->
                 <button
-                    class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 active:scale-95 transition"
-                    @click="setAvailable"
+                    class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 active:scale-95 transition cursor-pointer"
+                    @click="onUpdateStatus(PHONG_TRO_STATUS.Active)"
                 >
                     Còn phòng
                 </button>
                 <button
-                    class="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 active:scale-95 transition"
-                    @click="setHidden"
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 active:scale-95 transition cursor-pointer"
+                    @click="onUpdateStatus(PHONG_TRO_STATUS.Expired)"
                 >
                     Hết phòng
                 </button>
@@ -52,6 +52,22 @@
 <script setup>
 import { ref, computed, onMounted, reactive } from "vue";
 
+import { updatePhongTroStatus } from "~/apis/posts";
+import { useRoute } from "vue-router";
+import { decodeId, encodeId } from "~/utils/idHash";
+
+const route = useRoute();
+
+const hash = route.params.hash;
+const phongTroId = decodeId(hash);
+
+const PHONG_TRO_STATUS = {
+    Active: 1, // đang hoạt động
+    Waiting: 2, // chờ duyệt
+    Expired: 3, // hết hạn
+    Rejected: 4, // bị từ chối
+};
+
 const toast = reactive({
     show: false,
     message: "",
@@ -74,5 +90,22 @@ const setAvailable = () => {
 
 const setHidden = () => {
     showToast("⏸️ Phòng của bạn đã tạm ẩn trên hệ thống", "hidden");
+};
+
+const onUpdateStatus = async (status) => {
+    try {
+        const res = await updatePhongTroStatus(phongTroId, status);
+        console.log("Success:", res);
+        // show toast theo status
+        if (status === PHONG_TRO_STATUS.Active) {
+            setAvailable();
+        }
+
+        if (status === PHONG_TRO_STATUS.Expired) {
+            setHidden();
+        }
+    } catch (err) {
+        console.error("Error:", err);
+    }
 };
 </script>
